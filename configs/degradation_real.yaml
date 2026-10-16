@@ -1,0 +1,25 @@
+# Real-ESRGAN style second-order degradation (utils/degradation.py).
+# Used both to synthesise training pairs on the fly and, via scripts/degrade.py,
+# to build the fixed realistic LR val/test sets.
+mode: real
+# first stage
+blur_prob: 1.0
+kernel_range: [7, 21]
+sigma_range: [0.2, 3.0]
+resize_prob: [0.2, 0.7, 0.1]   # up, down, keep
+resize_range: [0.15, 1.5]
+gaussian_noise_prob: 0.5
+noise_range: [1, 30]
+poisson_scale_range: [0.05, 3.0]
+gray_noise_prob: 0.4
+jpeg_range: [30, 95]
+# second stage
+second_blur_prob: 0.8
+sigma_range2: [0.2, 1.5]
+resize_prob2: [0.3, 0.4, 0.3]
+resize_range2: [0.3, 1.2]
+gaussian_noise_prob2: 0.5
+noise_range2: [1, 25]
+poisson_scale_range2: [0.05, 2.5]
+gray_noise_prob2: 0.4
+jpeg_range2: [30, 95]

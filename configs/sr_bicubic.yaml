@@ -1,0 +1,17 @@
+# Stage 2 lower bound: bicubic interpolation (no training).
+task: sr
+out_dir: runs/sr_bicubic
+model:
+  name: bicubic
+data:
+  scale: 4
+  train_hr: data/seg/train/images       # SR is trained on crack images (HR only, LR made on the fly)
+  val_hr: data/seg/val/images
+  val_lr: data/seg/val/lr_x4_real       # made once by scripts/degrade.py
+  test_hr: data/seg/test/images
+  test_lr: data/seg/test/lr_x4_real
+  degradation: configs/degradation_real.yaml   # use {mode: bicubic} for the classic setting
+  patch_size: 192                        # HR patch side
+  repeat: 20                            # samples per image per "epoch" (small datasets)
+  crop_border: 4
+  val_limit: 50

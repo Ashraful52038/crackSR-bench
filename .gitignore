@@ -1,0 +1,24 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+.ipynb_checkpoints/
+
+# Data, weights and run outputs (keep on Google Drive)
+data/*
+!data/README.md
+weights/
+runs/
+results/vis/
+results/sr/
+*.pt
+*.pth
+*.ckpt
+*.safetensors
+
+# OS / editors
+.DS_Store
+.vscode/
+.idea/

@@ -1,0 +1,29 @@
+# Stage 3 baseline: UNet++ with ResNet-34 ImageNet encoder.
+task: segmentation
+out_dir: runs/seg_unetpp
+seed: 42
+model:
+  name: unetplusplus
+  encoder: resnet34
+  encoder_weights: imagenet
+data:
+  train_images: data/seg/train/images
+  train_masks: data/seg/train/masks
+  val_images: data/seg/val/images
+  val_masks: data/seg/val/masks
+  test_images: data/seg/test/images
+  test_masks: data/seg/test/masks
+  crop_size: 384
+train:
+  epochs: 60
+  batch_size: 8
+  lr: 3.0e-4
+  weight_decay: 1.0e-4
+  warmup_epochs: 1
+  bce_weight: 0.5
+  monitor: f1
+  amp: true
+  num_workers: 2
+eval:
+  threshold: 0.5
+  tolerance: 2               # pixels, for tolerance precision/recall/F1

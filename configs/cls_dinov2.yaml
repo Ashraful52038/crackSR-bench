@@ -1,0 +1,31 @@
+# Stage 1: DINOv2 ViT-S/14 backbone (self-supervised) + linear head.
+# Frozen backbone = linear probe; set unfreeze_last_blocks: 2 for partial fine-tuning.
+# Expect it to generalise better from lab (CCIC) to field images than plain CNNs.
+task: classification
+out_dir: runs/cls_dinov2
+seed: 42
+model:
+  name: vit_small_patch14_dinov2.lvd142m
+  num_classes: 2
+  pretrained: true
+  freeze_backbone: true
+  unfreeze_last_blocks: 0
+  img_size: 224
+  kwargs:
+    img_size: 224              # timm resamples the position embedding from 518
+data:
+  root: data/ccic              # CCIC: Negative/ and Positive/ sub-folders, split below with a fixed seed
+  val_frac: 0.15
+  test_frac: 0.15
+  split_seed: 0
+  extra_test:                  # out-of-domain test sets with the same class folders
+    field: data/field
+train:
+  epochs: 5
+  batch_size: 64
+  lr: 1.0e-3
+  weight_decay: 0.05
+  warmup_epochs: 1
+  label_smoothing: 0.1
+  amp: true
+  num_workers: 2

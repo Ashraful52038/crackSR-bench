@@ -1,0 +1,31 @@
+# Stage 2: SwinIR-M (transformer), real-world x4 PSNR weights, fine-tuned on crack images.
+# Architecture is read from the weights file by spandrel.
+task: sr
+out_dir: runs/sr_swinir
+seed: 42
+model:
+  name: spandrel
+  weights: weights/SwinIR-M_x4_realSR_PSNR.pth
+eval:
+  tile: 192
+data:
+  scale: 4
+  train_hr: data/seg/train/images       # SR is trained on crack images (HR only, LR made on the fly)
+  val_hr: data/seg/val/images
+  val_lr: data/seg/val/lr_x4_real       # made once by scripts/degrade.py
+  test_hr: data/seg/test/images
+  test_lr: data/seg/test/lr_x4_real
+  degradation: configs/degradation_real.yaml   # use {mode: bicubic} for the classic setting
+  patch_size: 192                        # HR patch side
+  repeat: 20                            # samples per image per "epoch" (small datasets)
+  crop_border: 4
+  val_limit: 50
+train:
+  iters: 30000
+  batch_size: 4
+  lr: 5.0e-5
+  loss: l1
+  amp: false                  # fp16 can be unstable for window-attention models
+  grad_clip: 1.0
+  val_every: 2000
+  num_workers: 2

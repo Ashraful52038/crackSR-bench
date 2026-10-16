@@ -1,0 +1,27 @@
+# Main experiment (scripts/pipeline_eval.py): LR -> SR -> segmentation, scored on the GT masks.
+# The segmentation model is trained on HR images once and kept fixed for all SR methods.
+# Copy this file and point data.lr_images to lr_x4_bicubic for the bicubic-degradation table.
+scale: 4
+threshold: 0.5
+tolerance: 2
+crop_border: 4
+seg:
+  config: configs/seg_unet.yaml
+  checkpoint: runs/seg_unet/best.pt
+data:
+  hr_images: data/seg/test/images
+  masks: data/seg/test/masks
+  lr_images: data/seg/test/lr_x4_real
+methods:
+  - {name: HR (upper bound), type: hr}
+  - {name: Bicubic, type: model, config: configs/sr_bicubic.yaml}
+  - {name: ESPCN, type: model, config: configs/sr_espcn.yaml, checkpoint: runs/sr_espcn/best.pt}
+  - {name: Real-ESRGAN (ft), type: model, config: configs/sr_realesrgan.yaml, checkpoint: runs/sr_realesrgan/best.pt, tile: 256}
+  - {name: SwinIR (ft), type: model, config: configs/sr_swinir.yaml, checkpoint: runs/sr_swinir/best.pt, tile: 192}
+  # - {name: SPAN (ft), type: model, config: configs/sr_span.yaml, checkpoint: runs/sr_span/best.pt}
+  # - {name: HAT (ft), type: model, config: configs/sr_hat.yaml, checkpoint: runs/sr_hat/best.pt, tile: 128}
+  # Outputs of external code (ResShift, SinSR, MambaIR), one PNG per test image with the same stem:
+  # - {name: ResShift, type: folder, sr_dir: results/sr/resshift_x4_real}
+out_csv: results/pipeline_x4_real.csv
+vis_dir: results/vis/pipeline_x4_real
+n_vis: 8

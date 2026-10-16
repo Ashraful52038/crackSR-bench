@@ -1,0 +1,31 @@
+# Stage 2: SPAN (lightweight, NTIRE 2024 efficient SR winner), fine-tuned on crack images.
+# Download the weights manually (see scripts/download_weights.sh).
+task: sr
+out_dir: runs/sr_span
+seed: 42
+model:
+  name: spandrel
+  weights: weights/spanx4_ch48.pth
+eval:
+  tile: 0
+data:
+  scale: 4
+  train_hr: data/seg/train/images       # SR is trained on crack images (HR only, LR made on the fly)
+  val_hr: data/seg/val/images
+  val_lr: data/seg/val/lr_x4_real       # made once by scripts/degrade.py
+  test_hr: data/seg/test/images
+  test_lr: data/seg/test/lr_x4_real
+  degradation: configs/degradation_real.yaml   # use {mode: bicubic} for the classic setting
+  patch_size: 192                        # HR patch side
+  repeat: 20                            # samples per image per "epoch" (small datasets)
+  crop_border: 4
+  val_limit: 50
+train:
+  iters: 30000
+  batch_size: 16
+  lr: 2.0e-4
+  loss: l1
+  amp: true                  # fp16 can be unstable for window-attention models
+  grad_clip: 1.0
+  val_every: 2000
+  num_workers: 2

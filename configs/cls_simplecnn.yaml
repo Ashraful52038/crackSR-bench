@@ -1,0 +1,24 @@
+# Stage 1 baseline: small CNN trained from scratch.
+task: classification
+out_dir: runs/cls_simplecnn
+seed: 42
+model:
+  name: simple_cnn
+  num_classes: 2
+  img_size: 128
+data:
+  root: data/ccic              # CCIC: Negative/ and Positive/ sub-folders, split below with a fixed seed
+  val_frac: 0.15
+  test_frac: 0.15
+  split_seed: 0
+  extra_test:                  # out-of-domain test sets with the same class folders
+    field: data/field
+train:
+  epochs: 10
+  batch_size: 128
+  lr: 1.0e-3
+  weight_decay: 0.05
+  warmup_epochs: 1
+  label_smoothing: 0.1
+  amp: true
+  num_workers: 2
