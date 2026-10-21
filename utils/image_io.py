@@ -4,7 +4,9 @@ from pathlib import Path
 
 import cv2
 import numpy as np
-import torch
+
+# torch is imported inside the tensor helpers so data-prep scripts
+# (degrade.py, prepare_seg_data.py) run without it.
 
 IMG_EXTS = {".png", ".jpg", ".jpeg", ".bmp", ".tif", ".tiff", ".webp"}
 MASK_SUFFIXES = ("_mask", "_label", "_gt", "_seg")
@@ -71,9 +73,11 @@ def mod_crop(img: np.ndarray, scale: int) -> np.ndarray:
     return img[: h - h % scale, : w - w % scale]
 
 
-def img2tensor(img: np.ndarray) -> torch.Tensor:
+def img2tensor(img: np.ndarray) -> "torch.Tensor":
+    import torch
+
     return torch.from_numpy(np.ascontiguousarray(img.transpose(2, 0, 1))).float().div(255.0)
 
 
-def tensor2img(t: torch.Tensor) -> np.ndarray:
+def tensor2img(t: "torch.Tensor") -> np.ndarray:
     return t.detach().float().clamp(0, 1).mul(255).round().byte().permute(1, 2, 0).cpu().numpy()
