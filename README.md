@@ -39,7 +39,7 @@ crackSR-bench/
 ## Setup
 
 ```bash
-git clone https://github.com/<you>/crackSR-bench.git
+git clone https://github.com/Ashraful52038/crackSR-bench.git
 cd crackSR-bench
 pip install -r requirements.txt
 bash scripts/download_weights.sh        # Real-ESRGAN + SwinIR weights into weights/
